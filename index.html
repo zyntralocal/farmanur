@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatmanur & Sonsuzluk ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f172a;
+            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #831843 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .romantic-font { font-family: 'Dancing Script', cursive; }
+        .royal-font { font-family: 'Playfair Display', serif; }
+        .hidden { display: none; }
+        
+        #no-btn {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            white-space: nowrap;
+        }
+
+        .heart {
+            position: fixed;
+            top: -10px;
+            pointer-events: none;
+            animation: fall linear forwards;
+            z-index: 999;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .gemini-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+        }
+
+        #custom-modal {
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(25px);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Youtube API için gerekli kap -->
+    <div id="player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+    <!-- 1. ŞİFRE EKRANI -->
+    <div id="login-screen" class="fixed inset-0 flex items-center justify-center z-[200] bg-slate-900">
+        <div class="bg-white/10 backdrop-blur-xl p-12 rounded-[3rem] shadow-2xl text-center max-w-md w-full mx-4 border border-white/20">
+            <div class="mb-6 inline-block p-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full text-4xl animate-pulse">🦁</div>
+            <h1 class="text-4xl font-bold mb-4 text-white royal-font">Kraliçemin Girişi</h1>
+            <p class="text-gray-300 mb-8 text-sm italic">
+                Aşkımızın sayısal ritmi...<br>
+                <span class="text-xs text-pink-400 font-mono">(f-a-t-m-a-n-u-r)</span>
+            </p>
+            <input type="text" id="password-input" placeholder="Sayıları fısılda..." 
+                   class="w-full p-4 bg-white/5 border-2 border-white/10 rounded-2xl mb-6 focus:outline-none focus:border-pink-500 text-center tracking-[0.3em] font-mono text-white">
+            <button id="login-btn" onclick="checkPassword()" class="bg-gradient-to-r from-pink-500 to-rose-600 text-white px-8 py-4 rounded-2xl hover:scale-105 transition-all w-full font-bold shadow-xl">
+                Kalbinin Kapısını Aç & Şarkımızı Başlat
+            </button>
+            <p id="error-msg" class="text-rose-400 mt-4 text-sm hidden italic">Ah Fatmanur'um, yanlış sayı... ❤️</p>
+        </div>
+    </div>
+
+    <!-- Sürpriz Modal (Kaçış 10 olduğunda) -->
+    <div id="custom-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-6">
+        <div class="bg-white p-10 rounded-[3rem] shadow-2xl text-center max-w-sm border-8 border-pink-200">
+            <h3 id="modal-title" class="text-3xl font-bold text-gray-800 mb-6 royal-font">Tamam Pes Ediyorum...</h3>
+            <p id="modal-desc" class="text-gray-600 mb-8 italic">Artık kovalamayacağım seni Fatmanur. Yoruldum sanırım...</p>
+            <button onclick="closeModal()" class="bg-pink-500 text-white px-10 py-4 rounded-2xl font-bold hover:scale-105 transition-all">Tamam</button>
+        </div>
+    </div>
+
+    <!-- 2. ANA İÇERİK -->
+    <div id="main-content" class="hidden w-full max-w-6xl mx-auto py-8">
+        <div class="text-center mb-16 fade-in">
+            <h1 class="text-6xl md:text-8xl text-white romantic-font mb-4">Fatmanur & Sonsuzluk</h1>
+            <p class="text-pink-300 text-xl royal-font italic">"Yaz yağmuru gibi indin kalbime..."</p>
+        </div>
+
+        <!-- ✨ GEMINI AI KISMI -->
+        <div class="mb-24 fade-in">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="gemini-box p-8 flex flex-col items-center text-center">
+                    <h3 class="text-2xl font-bold mb-4">✨ Sana Özel Mısralar</h3>
+                    <p id="ai-letter-text" class="text-gray-300 italic mb-6 text-lg">Fatmanur'un asaletini kelimelere döküyorum...</p>
+                    <button onclick="generateAiLetter()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-full transition-all">✨ Şiir Üret</button>
+                </div>
+                <div class="gemini-box p-8 flex flex-col items-center text-center">
+                    <h3 class="text-2xl font-bold mb-4">✨ Gelecek Vizyonu</h3>
+                    <p id="ai-future-text" class="text-gray-300 italic mb-6 text-lg">Yarınlarımızda ne var?</p>
+                    <button onclick="generateAiFuture()" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-full transition-all">✨ Geleceği Gör</button>
+                </div>
+             </div>
+        </div>
+
+        <!-- TEKLİF ALANI -->
+        <div id="proposal-box" class="bg-white rounded-[4rem] p-12 md:p-20 text-center relative overflow-hidden min-h-[700px] flex flex-col justify-center items-center border-[12px] border-pink-100/20 shadow-2xl mb-20">
+            <div id="ask-part" class="w-full flex flex-col items-center">
+                <div class="text-6xl mb-8 animate-bounce">👑</div>
+                <h2 class="text-4xl md:text-6xl text-gray-800 royal-font mb-16 leading-tight">
+                    Fatmanur,<br>
+                    <span class="text-pink-600">Yaz Yağmurum</span>, benimle sonsuzluğa yeniden 'Evet' der misin?
+                </h2>
+                <div class="flex flex-row justify-center items-center gap-8 w-full relative h-32">
+                    <button onclick="acceptOffer()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-12 py-5 rounded-full text-2xl font-black shadow-2xl hover:scale-110 transition-transform z-10">
+                        EVET!
+                    </button>
+                    <button id="no-btn" onmouseover="moveButton()" onclick="moveButton()" 
+                            class="bg-rose-100 text-rose-500 px-8 py-4 rounded-full font-bold text-lg shadow-lg border-2 border-rose-200">
+                        Hayır
+                    </button>
+                </div>
+                <div class="mt-16 max-w-md">
+                    <p id="fun-msg" class="text-pink-500 font-bold text-xl h-12 italic animate-pulse"></p>
+                    <p id="no-count" class="text-gray-400 text-sm mt-4">Kaçış Sayısı: 0</p>
+                </div>
+            </div>
+            <div id="success-part" class="hidden fade-in text-center">
+                <h2 class="text-6xl text-pink-600 romantic-font mb-4">Sonsuza Kadar Biz!</h2>
+                <p class="text-gray-600 text-lg mb-8 italic">Senden vazgeçmek mi? Asla.</p>
+                <div class="bg-pink-50 p-6 rounded-3xl inline-block shadow-inner">
+                    <p class="text-pink-600 font-bold text-lg" id="final-report"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const apiKey = ""; 
+        const CORRECT_PASSWORD = "7124161172521"; 
+        let noClickCount = 0;
+        let noBtnScale = 1;
+        let player;
+        let isPlayerReady = false;
+
+        // Youtube API Hazırlığı
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                videoId: '_p_zehTab3o',
+                playerVars: { 
+                    'autoplay': 0, 
+                    'loop': 1, 
+                    'playlist': '_p_zehTab3o',
+                    'controls': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': () => { isPlayerReady = true; }
+                }
+            });
+        }
+
+        async function callGemini(prompt, systemInstruction = "") {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemInstruction }] } };
+            try {
+                const response = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "...";
+            } catch (e) { return "Bağlantı koptu ama aşk baki."; }
+        }
+
+        async function generateAiLetter() {
+            const display = document.getElementById('ai-letter-text');
+            display.innerText = "Şiir damlıyor...";
+            const prompt = "Fatmanur için Şehinşah'ın Yaz Yağmuru şarkısı havasında, aslan burcu asaletini öven çok romantik kısa bir şiir yaz.";
+            display.innerText = await callGemini(prompt, "Dünyanın en iyi şairi.");
+        }
+
+        async function generateAiFuture() {
+            const display = document.getElementById('ai-future-text');
+            display.innerText = "Kader yazılıyor...";
+            display.innerText = await callGemini("Fatmanur ve sevgilisi için çok mutlu bir gelecek falı bak.", "Aşk falcısı.");
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value.replace(/\s/g, '');
+            if (input === CORRECT_PASSWORD) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+                // Kullanıcı tıkladığı için tarayıcı artık müziğe izin verir
+                if (isPlayerReady) {
+                    player.playVideo();
+                    player.setVolume(70);
+                }
+                startHeartRain();
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        function moveButton() {
+            noClickCount++;
+            const btn = document.getElementById('no-btn');
+            const msg = document.getElementById('fun-msg');
+            
+            const messages = [
+                "Kaçış yolun yok kraliçem! ❤️",
+                "Dünyanın en güzel aslanı, pes et!",
+                "Bak her hayırda seni daha çok seviyorum!",
+                "Yaz yağmuru gibi hapsoldun kalbime!",
+                "Sen kaç, ben kovalarım ömrümce!",
+                "Seni asla bırakmam Fatmanur!",
+                "Gözlerindeki ışık benim pusulam...",
+                "Buton küçülse de aşkım devleşiyor!",
+                "Asaletine kurban, teslim ol artık!",
+                "Kalbim sadece sende atıyor...",
+                "Kaçamayacağını biliyorsun güzelim 😂",
+                "Yaz yağmurunda ıslanmaya hazır mısın?",
+                "Sonsuza kadar sürecek bu oyun!",
+                "Sen benim en kıymetli hazinemsin.",
+                "Hayır demek bile yakışıyor sana!"
+            ];
+            msg.innerText = messages[Math.floor(Math.random() * messages.length)];
+
+            if (noClickCount === 10) {
+                document.getElementById('custom-modal').classList.remove('hidden');
+            }
+
+            btn.style.position = 'fixed';
+            const padding = 150;
+            const x = Math.random() * (window.innerWidth - padding * 2) + padding;
+            const y = Math.random() * (window.innerHeight - padding * 2) + padding;
+            btn.style.left = x + "px";
+            btn.style.top = y + "px";
+            
+            if (noBtnScale > 0.15) {
+                noBtnScale -= 0.08;
+                btn.style.transform = `scale(${noBtnScale})`;
+            }
+            document.getElementById('no-count').innerText = `Kaçış Sayısı: ${noClickCount}`;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            
+            if (title.innerText === "Tamam Pes Ediyorum...") {
+                title.innerText = "Şaka yaptım! 😂";
+                desc.innerText = "Ben senden hiç vazgeçer miyim sanıyorsun Fatmanur? Dünyanın sonuna kadar peşindeyim! ❤️";
+            } else {
+                modal.classList.add('hidden');
+                // Modal kapandıktan sonra butonun yerini sıfırla ki tekrar tıklayabilsin (isterse)
+                const btn = document.getElementById('no-btn');
+                btn.style.position = 'relative';
+                btn.style.left = '0';
+                btn.style.top = '0';
+            }
+        }
+
+        function acceptOffer() {
+            document.getElementById('ask-part').classList.add('hidden');
+            document.getElementById('success-part').classList.remove('hidden');
+            document.getElementById('final-report').innerText = `${noClickCount} kez kaçmaya çalıştın ama aslan kraliçem sonunda kalbime kondu! Seni çok seviyorum!`;
+            for(let i=0; i<250; i++) setTimeout(createHeart, i * 15);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            const icons = ['❤️', '💖', '💍', '🦁', '👑', '✨', '🌸', '🎶'];
+            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = (Math.random() * 25 + 20) + "px";
+            heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        function startHeartRain() { setInterval(createHeart, 600); }
+    </script>
+</body>
+</html>
